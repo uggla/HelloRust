@@ -1,10 +1,11 @@
 extern crate flate2;
 
-use std::io;
+use flate2::read::GzDecoder;
+use std::collections::HashMap;
 use std::fs::File;
+use std::io;
 use std::io::Read;
 use std::io::Write;
-use flate2::read::GzDecoder;
 
 fn run() -> Result<String, io::Error> {
     let path = "ascii.txt.gz";
@@ -45,4 +46,24 @@ fn main() {
     };
     let result = run().expect("Failed");
     println!("{}", result);
+
+    println!("Playing with a HashMap");
+    println!("----------------------");
+    let mut hash: HashMap<String, u32> = HashMap::new();
+    hash.insert("René".to_string(), 10);
+    hash.insert("Bla".into(), 12);
+    hash.entry("René".to_owned()).or_insert(25); // Already exist
+    hash.entry("TOTO".to_string()).or_insert(25);
+
+    for (key, value) in hash.iter() {
+        println!("Key: {}={}", key, value);
+    }
+
+    if hash.contains_key("Bla") {
+        println!("Key: Bla is in the HashMap");
+        println!(
+            "Value of key: Bla {}",
+            hash.get("Bla").expect("Key not found !")
+        );
+    }
 }
